@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WILD.LY</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo-container">
+      <img src="imagem-logo.png" alt="WILD.LY Logo" class="brand-logo" onerror="this.style.display='none'" />
+      <div class="brand-info">
+        <span class="brand-title">WILD.LY</span>
+        <span class="brand-description">A tua plataforma de builds e dicas</span>
+      </div>
+    </div>
+
+    <div class="game-toggle-box">
+      <button id="tabWR" class="game-tab active" onclick="switchGame('wr')">📱 Wild Rift</button>
+      <button id="tabPC" class="game-tab" onclick="switchGame('pc')">💻 LoL PC</button>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar builds, dicas..." />
+      <button id="searchBtn">🔍</button>
+    </div>
+
+    <div class="user-header-group">
+      <div class="user-profile-header" onclick="openViewProfileModal()">
+        <div class="avatar-circle" id="headerAvatar"></div>
+        <div class="user-text-info">
+          <span class="user-name-display" id="displayHeaderNick">REMOVAM A ASHE</span>
+          <span class="user-ranks-display" id="displayHeaderRank">Esmeralda | Peak: Grão-Mestre</span>
+        </div>
+      </div>
+      <button class="btn-view-profile" onclick="openViewProfileModal()">👤 Perfil</button>
+      <button class="btn-create-profile" onclick="openCreateProfileModal()">➕ Criar</button>
+    </div>
+
+    <button class="btn-create-post" onclick="openCreatePostModal()">+ Criar Dica</button>
+  </header>
+
+  <main class="main-layout">
+    <aside class="sidebar-left">
+      <div class="sidebar-box">
+        <h3 class="sidebar-title">NAVEGAÇÃO</h3>
+        <ul class="sidebar-menu">
+          <li class="active">🏠 Início</li>
+          <li>🏆 Tier List</li>
+          <li>📘 Builds</li>
+          <li>👥 Comunidade</li>
+        </ul>
+      </div>
+    </aside>
+
+    <section class="content-center">
+      <div class="roles-filter-bar">
+        <button class="role-btn active">Todos</button>
+        <button class="role-btn">Barão / Top</button>
+        <button class="role-btn">Selva (Jungle)</button>
+        <button class="role-btn">Mid</button>
+        <button class="role-btn">ADC</button>
+        <button class="role-btn">Suporte</button>
+      </div>
+
+      <h2 id="currentSectionLabel" class="section-title">INÍCIO - WILD RIFT</h2>
+
+      <div id="cardsGrid" class="cards-grid"></div>
+    </section>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-box">
+        <h3 class="sidebar-title">SOBRE O PROJETO</h3>
+        <p class="about-text">O conhecimento do Rift em um só lugar. Desenvolvido para a comunidade.</p>
+      </div>
+    </aside>
+  </main>
+
+  <div id="viewProfileModal" class="modal-overlay">
+    <div class="modal-content profile-card-view">
+      <button class="btn-close-modal" onclick="closeViewProfileModal()">✕</button>
+
+      <div class="profile-card-header">
+        <div class="profile-card-avatar" id="viewAvatar"></div>
+        <h2 id="viewNick" class="profile-card-nick">Nickname</h2>
+        <span id="viewGameBadge" class="profile-game-badge">Wild Rift</span>
+      </div>
+
+      <div class="profile-card-body">
+        <div class="profile-stat-item">
+          <span class="stat-label">Elo Atual</span>
+          <span id="viewCurrentRank" class="stat-value">Esmeralda</span>
+        </div>
+        <div class="profile-stat-item">
+          <span class="stat-label">Elo Máximo (Peak)</span>
+          <span id="viewPeakRank" class="stat-value">Grão-Mestre</span>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top: 20px; justify-content: center;">
+        <button type="button" class="btn-save" onclick="openProfileModal()">✏️ Editar Perfil</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="profileModal" class="modal-overlay">
+    <div class="modal-content">
+      <h2 id="profileModalTitle">Editar Perfil</h2>
+      <form onsubmit="saveProfile(event)">
+        <label>Nickname:</label>
+        <input type="text" id="profileNick" required />
+
+        <label>Jogo Principal:</label>
+        <select id="profileGame">
+          <option value="wr">Wild Rift</option>
+          <option value="pc">LoL PC</option>
+        </select>
+
+        <label>Elo Atual:</label>
+        <input type="text" id="profileCurrentRank" />
+
+        <label>Elo Máximo (Peak):</label>
+        <input type="text" id="profilePeakRank" />
+
+        <label>Foto de Perfil (URL da Imagem):</label>
+        <input type="text" id="profileAvatarUrl" placeholder="https://exemplo.com/minha-foto.png" />
+
+        <label>Ou escolha um arquivo do computador:</label>
+        <input type="file" id="profileAvatarFile" accept="image/*" onchange="handleFileSelect(event)" />
+
+        <div class="avatar-preview-box" style="margin-top: 10px; text-align: center;">
+          <img id="avatarPreview" src="" alt="Prévia do Avatar" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; display: none; border: 1px solid var(--border-gold);" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" onclick="closeProfileModal()">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="createPostModal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Criar Nova Dica / Build</h2>
+      <form onsubmit="savePost(event)">
+        <label>Título / Descrição da Dica:</label>
+        <input type="text" id="postTitle" placeholder="Ex: Build Pyke Suporte" required />
+
+        <label>Campeão:</label>
+        <input type="text" id="postChampion" placeholder="Ex: Pyke, Ahri, Volibear..." required />
+
+        <label>Rota / Função:</label>
+        <select id="postRole">
+          <option value="Suporte">Suporte</option>
+          <option value="Barão / Top">Barão / Top</option>
+          <option value="Selva (Jungle)">Selva (Jungle)</option>
+          <option value="Mid">Mid</option>
+          <option value="ADC">ADC</option>
+        </select>
+
+        <label>Categoria:</label>
+        <select id="postCategory">
+          <option value="builds">Builds</option>
+          <option value="tierlist">Tier List</option>
+          <option value="comunidade">Comunidade</option>
+        </select>
+
+        <label>Itens Principais (separados por vírgula):</label>
+        <input type="text" id="postItems" placeholder="Ex: Draktharr, Youmuu, Anjo Guardião" />
+
+        <div class="modal-actions">
+          <button type="button" onclick="closeCreatePostModal()">Cancelar</button>
+          <button type="submit" class="btn-save">Publicar Dica</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer-bottom-left">
+    Criado por: Matheus Rohr Colombi &copy; 2026
+  </footer>
+
+  <div class="floating-contact-container">
+    <div id="contactMenu" class="contact-menu">
+      <div class="contact-header">Entre em Contato</div>
+      <a href="https://wa.me/5527998724287" target="_blank" class="contact-item whatsapp">
+        <span class="icon">💬</span> (27) 99872-4287
+      </a>
+      <a href="mailto:matheusrohr.hs@gmail.com" class="contact-item email">
+        <span class="icon">✉️</span> matheusrohr.hs@gmail.com
+      </a>
+    </div>
+    <button class="btn-floating-contact" onclick="toggleContactMenu()">
+      💬 Contato
+    </button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
